@@ -9,8 +9,7 @@ class Kms {
     static SecretKeySpec getKeySpec() {
         AWSKMS kmsClient = AWSKMSClientBuilder.defaultClient();
         final GenerateDataKeyRequest request = new GenerateDataKeyRequest()
-                .withKeySpec(DataKeySpec.AES_128)
-                .withKeyId("foo");
+                .withKeySpec("AES_128");
 
         final GenerateDataKeyResult response = kmsClient.generateDataKey(request);
         return new SecretKeySpec(response.getPlaintext().array(), "AES");

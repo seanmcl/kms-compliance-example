@@ -26,7 +26,7 @@ allprojects {
         '-Awarns',
         '-AcheckPurityAnnotations',
         "-Xbootclasspath/p:${configurations.checkerFrameworkAnnotatedJDK.asPath}",
-        "-Astubs=../aws-kms-compliance-checker/build/libs/aws-kms-compliance-checker"
+        "-Astubs=../aws-kms-compliance-checker"
       ]
     }
   }
