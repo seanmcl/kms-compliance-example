@@ -10,9 +10,10 @@ configurations {
 
 dependencies {
     ext.checkerFrameworkVersion = '2.6.0'
+    ext.kmsVersion = '1.0.0'
     checkerFrameworkAnnotatedJDK "org.checkerframework:jdk8:${checkerFrameworkVersion}"
     annotationProcessor "org.checkerframework:checker:${checkerFrameworkVersion}"
-    annotationProcessor files("aws-kms-compliance-checker.jar")
+    annotationProcessor "software.amazon.checkerframework:aws-kms-compliance-checker:${kmsVersion}"
     implementation "org.checkerframework:checker-qual:${checkerFrameworkVersion}"
 }
 
