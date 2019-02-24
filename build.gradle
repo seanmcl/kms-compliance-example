@@ -12,7 +12,7 @@ repositories {
 
 dependencies {
     implementation group: 'com.amazonaws', name: 'aws-java-sdk-kms', version: '1.11.502'
-    implementation group: 'software.amazon.checkerframework', name: 'aws-kms-compliance-checker', version: '1.0.0'
+    implementation group: 'software.amazon.checkerframework', name: 'aws-kms-compliance-checker', version: '1.0.1'
 }
 
 apply from: "checkerframework.gradle"
