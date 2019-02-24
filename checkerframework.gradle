@@ -12,7 +12,7 @@ dependencies {
     ext.checkerFrameworkVersion = '2.6.0'
     checkerFrameworkAnnotatedJDK "org.checkerframework:jdk8:${checkerFrameworkVersion}"
     annotationProcessor "org.checkerframework:checker:${checkerFrameworkVersion}"
-    annotationProcessor files("../aws-kms-compliance-checker/build/libs/aws-kms-compliance-checker.jar")
+    annotationProcessor files("aws-kms-compliance-checker.jar")
     implementation "org.checkerframework:checker-qual:${checkerFrameworkVersion}"
 }
 
@@ -22,13 +22,8 @@ allprojects {
     compile.doFirst {
       compile.options.compilerArgs = [
         '-processor', 'com.amazon.checkerframework.compliance.kms.ComplianceChecker',
-        '-Xmaxerrs', '10000',
-        '-Awarns',
-        '-AcheckPurityAnnotations',
         "-Xbootclasspath/p:${configurations.checkerFrameworkAnnotatedJDK.asPath}",
-        "-Astubs=../aws-kms-compliance-checker"
       ]
     }
   }
 }
-
