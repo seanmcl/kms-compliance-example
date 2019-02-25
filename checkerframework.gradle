@@ -9,12 +9,25 @@ configurations {
 }
 
 dependencies {
+  if (!rootProject.hasProperty('cfLocal')) {
     ext.checkerFrameworkVersion = '2.6.0'
     ext.kmsVersion = '1.0.1'
     checkerFrameworkAnnotatedJDK "org.checkerframework:jdk8:${checkerFrameworkVersion}"
     annotationProcessor "org.checkerframework:checker:${checkerFrameworkVersion}"
     annotationProcessor "software.amazon.checkerframework:aws-kms-compliance-checker:${kmsVersion}"
     implementation "org.checkerframework:checker-qual:${checkerFrameworkVersion}"
+  } else if (System.getenv("CHECKERFRAMEWORK") == null) {
+    throw new GradleException("Environment variable CHECKERFRAMEWORK is not set")
+  } else if (! file(System.getenv("CHECKERFRAMEWORK")).exists()) {
+    throw new GradleException("Environment variable CHECKERFRAMEWORK is set to non-existent directory " + System.getenv("CHECKERFRAMEWORK"));
+  } else {
+    ext.checkerframeworkdist = "$System.env.CHECKERFRAMEWORK/checker/dist"
+    ext.kmsVersion = '1.0.1'
+    checkerFrameworkAnnotatedJDK fileTree(dir: "${ext.checkerframeworkdist}", include: "jdk8.jar")
+    annotationProcessor fileTree(dir: "${ext.checkerframeworkdist}", include: 'checker.jar')
+    annotationProcessor "software.amazon.checkerframework:aws-kms-compliance-checker:${kmsVersion}"
+    implementation fileTree(dir: "${ext.checkerframeworkdist}", include: 'checker-qual.jar')
+  }
 }
 
 // To type-check all projects.
@@ -23,8 +36,7 @@ allprojects {
     compile.doFirst {
       compile.options.compilerArgs = [
         '-processor', 'com.amazon.checkerframework.compliance.kms.ComplianceChecker',
-        "-Xbootclasspath/p:${configurations.checkerFrameworkAnnotatedJDK.asPath}",
-        '-Astubs=aws-kms-compliance-checker.jar'
+        "-Xbootclasspath/p:${configurations.checkerFrameworkAnnotatedJDK.asPath}"
       ]
     }
   }
