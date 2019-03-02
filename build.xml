@@ -18,7 +18,10 @@
   <target name="compile" depends="init,resolve"
         description="compile the source">
     <!-- Compile the Java code from ${src} into ${build} -->
-    <javac srcdir="${src}" destdir="${build}" classpathref="compile.path"/>
+    <javac srcdir="${src}" destdir="${build}" classpathref="compile.path"
+	   fork="true">
+      <compilerarg line="-processor com.amazon.checkerframework.compliance.kms.ComplianceChecker"/>
+    </javac>
   </target>
 
   <target name="dist" depends="compile"
@@ -48,6 +51,7 @@
   <target name="resolve" depends="install-ivy" description="Use ivy to resolve classpaths">
     <ivy:cachepath pathid="compile.path">
       <dependency org="com.amazonaws" name="aws-java-sdk-kms" rev="1.11.502" conf="default"/>
+      <dependency org="software.amazon.checkerframework" name="aws-kms-compliance-checker" rev="1.0.2" conf="default"/>
     </ivy:cachepath>
   </target>
 
