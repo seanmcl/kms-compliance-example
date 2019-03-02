@@ -1,0 +1,54 @@
+<project name="KMS-compliance-example" default="dist" basedir="."
+	 xmlns:ivy="antlib:org.apache.ivy.ant">
+  <description>
+    simple example build file
+  </description>
+  <!-- set global properties for this build -->
+  <property name="src" location="src"/>
+  <property name="build" location="build"/>
+  <property name="dist" location="dist"/>
+
+  <target name="init">
+    <!-- Create the time stamp -->
+    <tstamp/>
+    <!-- Create the build directory structure used by compile -->
+    <mkdir dir="${build}"/>
+  </target>
+
+  <target name="compile" depends="init,resolve"
+        description="compile the source">
+    <!-- Compile the Java code from ${src} into ${build} -->
+    <javac srcdir="${src}" destdir="${build}" classpathref="compile.path"/>
+  </target>
+
+  <target name="dist" depends="compile"
+        description="generate the distribution">
+    <!-- Create the distribution directory -->
+    <mkdir dir="${dist}/lib"/>
+
+    <!-- Put everything in ${build} into the MyProject-${DSTAMP}.jar file -->
+    <jar jarfile="${dist}/lib/kms-compliance-example-${DSTAMP}.jar" basedir="${build}"/>
+  </target>
+
+  <target name="clean"
+        description="clean up">
+    <!-- Delete the ${build} and ${dist} directory trees -->
+    <delete dir="${build}"/>
+    <delete dir="${dist}"/>
+  </target>
+
+  <available classname="org.apache.ivy.Main" property="ivy.installed"/> 
+
+  <target name="install-ivy" description="Install ivy" unless="ivy.installed">
+    <mkdir dir="${user.home}/.ant/lib"/>
+    <get dest="${user.home}/.ant/lib/ivy.jar" src="http://search.maven.org/remotecontent?filepath=org/apache/ivy/ivy/2.3.0/ivy-2.3.0.jar"/>
+    <fail message="Ivy has been installed. Run the build again"/>
+  </target>
+
+  <target name="resolve" depends="install-ivy" description="Use ivy to resolve classpaths">
+    <ivy:cachepath pathid="compile.path">
+      <dependency org="com.amazonaws" name="aws-java-sdk-kms" rev="1.11.502" conf="default"/>
+    </ivy:cachepath>
+  </target>
+
+</project>
