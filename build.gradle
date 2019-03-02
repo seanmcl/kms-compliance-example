@@ -2,7 +2,7 @@ plugins {
     id 'java'
 }
 
-version '1.0-SNAPSHOT'
+version '1.0.0'
 
 sourceCompatibility = 1.8
 
@@ -11,13 +11,16 @@ repositories {
 }
 
 configurations {
-  checkerFrameworkAnnotatedJDK
+  checkerFrameworkAnnotatedJDK {
+    description = 'a copy of JDK classes with Checker Framework type qualifers inserted'
+  }
 }
 
 dependencies {
-    annotationProcessor "software.amazon.checkerframework:aws-kms-compliance-checker:1.0.2"
-    implementation "org.checkerframework:checker-qual:2.6.0"
-    implementation group: 'com.amazonaws', name: 'aws-java-sdk-kms', version: '1.11.502'
+  annotationProcessor "software.amazon.checkerframework:aws-kms-compliance-checker:1.0.2"
+  checkerFrameworkAnnotatedJDK "org.checkerframework:jdk8:2.6.0"
+  implementation "org.checkerframework:checker-qual:2.6.0"
+  implementation group: 'com.amazonaws', name: 'aws-java-sdk-kms', version: '1.11.502'
 }
 
 allprojects {
